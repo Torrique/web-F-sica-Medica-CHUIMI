@@ -1,0 +1,20 @@
+{
+  "name": "web-f-sica-medica-chuimi",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-06-23",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "web-fisica-medica",
+      "database_id": "REEMPLAZAR_POR_DATABASE_ID"
+    }
+  ],
+  "vars": {
+    "CODE_VALID_DAYS": "30"
+  }
+}
