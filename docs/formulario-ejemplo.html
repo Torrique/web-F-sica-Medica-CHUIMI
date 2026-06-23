@@ -23,11 +23,10 @@
   <div class="form-head">
     <span class="tag">Formulario de datos</span>
     <h1>Ficha del trabajador profesionalmente expuesto</h1>
-    <p class="lede">Cumplimente los campos y pulse «Descargar PDF editable». El archivo se genera íntegramente en su dispositivo: ningún dato introducido se envía al servidor. Después, remita el PDF por el correo interno del Servicio.</p>
+    <p class="lede">Cumplimente los campos y genere su código individual de seguimiento. El código se incorporará al PDF editable y se utilizará después para acceder al vídeo formativo.</p>
   </div>
 
   <form class="form-card" id="tpeForm" onsubmit="return false;">
-
     <div class="print-head">
       <img src="../assets/logo-servicio.jpg" alt="">
       <div>
@@ -86,6 +85,21 @@
       </div>
     </div>
 
+    <div class="fieldset tracking-fieldset">
+      <h2 class="fs-title">Código de seguimiento</h2>
+      <div class="tracking-box">
+        <div class="tracking-main">
+          <label class="flabel" for="codigoSeguimiento">Código individual asignado</label>
+          <input class="tracking-code" id="codigoSeguimiento" type="text" readonly placeholder="Pendiente de generar" aria-describedby="codigoAyuda">
+        </div>
+        <div class="tracking-actions">
+          <button class="btn btn-secondary" type="button" id="generarCodigo">Generar código</button>
+          <button class="btn btn-soft" type="button" id="copiarCodigo" disabled>Copiar código</button>
+        </div>
+        <p class="tracking-help" id="codigoAyuda">Este código no contiene su nombre ni su DNI. Quedará impreso en el PDF y permitirá relacionar el formulario remitido con la confirmación de visualización del vídeo.</p>
+      </div>
+    </div>
+
     <div class="fieldset">
       <h2 class="fs-title">Documentación aportada</h2>
       <div class="checks">
@@ -115,29 +129,28 @@
     <div class="fieldset">
       <h2 class="fs-title">Protección de datos</h2>
       <div class="privacy">
-        <p>Este formulario se cumplimenta y se guarda <b>en su propio dispositivo</b>. Esta página <b>no almacena ni envía</b> los datos introducidos: no quedan en ningún servidor ni en la nube.</p>
+        <p>Este formulario se cumplimenta y se guarda <b>en su propio dispositivo</b>. Esta página <b>no almacena ni envía</b> los datos personales introducidos: no quedan en ningún servidor ni en la nube.</p>
         <p>Una vez generado el PDF, remítalo <b>por el canal de correo interno del Servicio</b>. Los datos serán tratados por el Servicio de Física Médica y Protección Radiológica del CHUIMI con la finalidad de la vigilancia y valoración del puesto del trabajador profesionalmente expuesto, conforme al RGPD (UE) 2016/679 y la LOPDGDD 3/2018. Puede ejercer sus derechos de acceso, rectificación, supresión y oposición ante el Servicio.</p>
         <label class="check ack"><input type="checkbox" id="ack"> He leído y acepto la información sobre protección de datos.</label>
       </div>
     </div>
 
     <div class="form-actions">
-      <button class="btn btn-primary locked" type="button" id="pdfbtn" disabled>Descargar PDF editable</button>
-      <span class="pdfhint">
-        Se descargará un PDF cumplimentado que seguirá siendo editable. Envíelo por correo interno a
-        <a href="mailto:rfchuimi.scs@gobiernodecanarias.org">rfchuimi.scs@gobiernodecanarias.org</a>.
-      </span>
+      <button class="btn btn-primary locked" type="button" id="pdfbtn" disabled>Generar código y descargar PDF editable</button>
+      <span class="pdfhint">El PDF incluirá el código de seguimiento. Envíelo por correo interno a <a href="mailto:rfchuimi.scs@gobiernodecanarias.org">rfchuimi.scs@gobiernodecanarias.org</a>.</span>
       <div id="pdfstatus" class="pdfstatus" role="status" aria-live="polite"></div>
+      <div id="afterPdf" class="after-pdf" hidden>
+        <b>Conserve el código mostrado.</b>
+        <span>Después de enviar el PDF, acceda al vídeo con ese mismo código.</span>
+        <a class="btn btn-secondary" id="irVideo" href="../acceso.html">Acceder al vídeo con el código</a>
+      </div>
     </div>
   </form>
 </main>
 
 <footer class="foot">
   <div class="foot-in">
-    <div>
-      <b>Servicio de Física Médica y Protección Radiológica</b>
-      Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)
-    </div>
+    <div><b>Servicio de Física Médica y Protección Radiológica</b>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</div>
     <div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div>
   </div>
 </footer>
@@ -146,9 +159,48 @@
 (function () {
   'use strict';
 
+  const STORAGE_KEY = 'tpeCodigoSeguimiento';
+  const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const ack = document.getElementById('ack');
   const pdfbtn = document.getElementById('pdfbtn');
   const pdfstatus = document.getElementById('pdfstatus');
+  const codigoInput = document.getElementById('codigoSeguimiento');
+  const generarCodigoBtn = document.getElementById('generarCodigo');
+  const copiarCodigoBtn = document.getElementById('copiarCodigo');
+  const afterPdf = document.getElementById('afterPdf');
+  const irVideo = document.getElementById('irVideo');
+
+  function generarBloque(longitud) {
+    const bytes = new Uint8Array(longitud);
+    window.crypto.getRandomValues(bytes);
+    let resultado = '';
+    for (let i = 0; i < bytes.length; i += 1) resultado += ALFABETO[bytes[i] % ALFABETO.length];
+    return resultado;
+  }
+
+  function generarCodigoNuevo() {
+    return `TPE-${generarBloque(4)}-${generarBloque(4)}`;
+  }
+
+  function codigoValido(codigo) {
+    return /^TPE-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(codigo || '');
+  }
+
+  function establecerCodigo(codigo) {
+    if (!codigoValido(codigo)) return;
+    codigoInput.value = codigo;
+    sessionStorage.setItem(STORAGE_KEY, codigo);
+    copiarCodigoBtn.disabled = false;
+    generarCodigoBtn.textContent = 'Generar otro código';
+    irVideo.href = `../acceso.html?code=${encodeURIComponent(codigo)}`;
+  }
+
+  function obtenerOCrearCodigo() {
+    if (codigoValido(codigoInput.value)) return codigoInput.value;
+    const nuevo = generarCodigoNuevo();
+    establecerCodigo(nuevo);
+    return nuevo;
+  }
 
   function syncButton() {
     const bloqueado = !ack.checked;
@@ -156,13 +208,8 @@
     pdfbtn.classList.toggle('locked', bloqueado);
   }
 
-  function valor(id) {
-    return document.getElementById(id).value.trim();
-  }
-
-  function marcado(id) {
-    return document.getElementById(id).checked;
-  }
+  function valor(id) { return document.getElementById(id).value.trim(); }
+  function marcado(id) { return document.getElementById(id).checked; }
 
   function fechaEspanola(fechaIso) {
     if (!fechaIso) return '';
@@ -171,44 +218,39 @@
   }
 
   function nombreSeguro(texto) {
-    return (texto || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zA-Z0-9_-]+/g, '_')
-      .replace(/^_+|_+$/g, '')
-      .slice(0, 80);
+    return (texto || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 80);
   }
 
-  function escribirTexto(form, campo, contenido) {
-    form.getTextField(campo).setText(contenido || '');
-  }
-
-  function seleccionar(form, campo, contenido) {
-    form.getDropdown(campo).select(contenido || 'Seleccione...');
-  }
-
+  function escribirTexto(form, campo, contenido) { form.getTextField(campo).setText(contenido || ''); }
+  function seleccionar(form, campo, contenido) { form.getDropdown(campo).select(contenido || 'Seleccione...'); }
   function escribirCheck(form, campo, activo) {
     const check = form.getCheckBox(campo);
-    if (activo) check.check();
-    else check.uncheck();
+    if (activo) check.check(); else check.uncheck();
+  }
+
+  function estamparCodigo(pdfDoc, fuenteNormal, fuenteNegrita, codigo) {
+    const pagina = pdfDoc.getPages()[0];
+    const azul = window.PDFLib.rgb(21 / 255, 87 / 255, 125 / 255);
+    const oscuro = window.PDFLib.rgb(17 / 255, 33 / 255, 46 / 255);
+    const borde = window.PDFLib.rgb(158 / 255, 190 / 255, 210 / 255);
+    pagina.drawText('Código de seguimiento', { x: 307.64, y: 239, size: 9.5, font: fuenteNegrita, color: oscuro });
+    pagina.drawRectangle({ x: 307.64, y: 198.89, width: 232.64, height: 31, borderWidth: 0.8, borderColor: borde, color: window.PDFLib.rgb(1, 1, 1) });
+    pagina.drawText(codigo, { x: 321, y: 209, size: 13, font: fuenteNegrita, color: azul });
   }
 
   async function generarPDFInteractivo() {
     pdfstatus.className = 'pdfstatus';
     pdfstatus.textContent = '';
+    afterPdf.hidden = true;
     pdfbtn.disabled = true;
     pdfbtn.classList.add('loading');
     pdfbtn.textContent = 'Generando PDF…';
 
     try {
-      if (!window.PDFLib) {
-        throw new Error('No se ha podido cargar la librería local de generación de PDF.');
-      }
-
+      if (!window.PDFLib) throw new Error('No se ha podido cargar la librería local de generación de PDF.');
+      const codigo = obtenerOCrearCodigo();
       const respuesta = await fetch('./plantilla-tpe-interactiva.pdf', { cache: 'no-store' });
-      if (!respuesta.ok) {
-        throw new Error(`No se ha podido cargar la plantilla PDF (${respuesta.status}).`);
-      }
+      if (!respuesta.ok) throw new Error(`No se ha podido cargar la plantilla PDF (${respuesta.status}).`);
 
       const bytesPlantilla = await respuesta.arrayBuffer();
       const { PDFDocument, StandardFonts } = window.PDFLib;
@@ -228,7 +270,6 @@
       escribirTexto(form, 'CampoCP', valor('cp'));
       escribirTexto(form, 'CampoProvincia', valor('provincia'));
       escribirTexto(form, 'CampoObservaciones', valor('obs'));
-
       escribirCheck(form, 'CheckFotocopiaDNI', marcado('docDni'));
       escribirCheck(form, 'CheckTituloCompulsado', marcado('tituloCompulsado'));
       escribirCheck(form, 'CheckOtraInstitucion', marcado('otraInstitucion'));
@@ -237,38 +278,59 @@
       escribirCheck(form, 'CheckEnAlta', marcado('enalta'));
       escribirCheck(form, 'CheckAceptacionPD', marcado('ack'));
 
-      // Regenera la apariencia visual de los campos, pero NO aplana el formulario.
-      // Por ello, el PDF descargado sigue siendo editable.
-      const fuente = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      form.updateFieldAppearances(fuente);
+      const fuenteNormal = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const fuenteNegrita = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      form.updateFieldAppearances(fuenteNormal);
+      estamparCodigo(pdfDoc, fuenteNormal, fuenteNegrita, codigo);
 
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const enlace = document.createElement('a');
-
       const nombre = nombreSeguro(valor('nombre')) || 'trabajador';
       const apellidos = nombreSeguro(valor('apellidos'));
       enlace.href = url;
-      enlace.download = `Ficha_TPE_${nombre}${apellidos ? '_' + apellidos : ''}.pdf`;
+      enlace.download = `Ficha_TPE_${codigo}_${nombre}${apellidos ? '_' + apellidos : ''}.pdf`;
       document.body.appendChild(enlace);
       enlace.click();
       enlace.remove();
       window.setTimeout(() => URL.revokeObjectURL(url), 30000);
 
       pdfstatus.className = 'pdfstatus success';
-      pdfstatus.textContent = 'PDF generado correctamente. El archivo permanece editable.';
+      pdfstatus.textContent = `PDF generado correctamente. Código de seguimiento: ${codigo}.`;
+      afterPdf.hidden = false;
     } catch (error) {
       console.error(error);
       pdfstatus.className = 'pdfstatus error';
       pdfstatus.textContent = `No se pudo generar el PDF: ${error.message}`;
     } finally {
-      pdfbtn.textContent = 'Descargar PDF editable';
+      pdfbtn.textContent = 'Generar código y descargar PDF editable';
       pdfbtn.classList.remove('loading');
       syncButton();
     }
   }
 
+  generarCodigoBtn.addEventListener('click', function () {
+    if (codigoValido(codigoInput.value) && !window.confirm('Se sustituirá el código actual por uno nuevo. ¿Desea continuar?')) return;
+    establecerCodigo(generarCodigoNuevo());
+    pdfstatus.className = 'pdfstatus success';
+    pdfstatus.textContent = `Código generado: ${codigoInput.value}. Se incorporará al PDF.`;
+  });
+
+  copiarCodigoBtn.addEventListener('click', async function () {
+    if (!codigoValido(codigoInput.value)) return;
+    try {
+      await navigator.clipboard.writeText(codigoInput.value);
+      copiarCodigoBtn.textContent = 'Código copiado';
+      window.setTimeout(() => { copiarCodigoBtn.textContent = 'Copiar código'; }, 1800);
+    } catch (_) {
+      codigoInput.select();
+      document.execCommand('copy');
+    }
+  });
+
+  const codigoGuardado = sessionStorage.getItem(STORAGE_KEY);
+  if (codigoValido(codigoGuardado)) establecerCodigo(codigoGuardado);
   ack.addEventListener('change', syncButton);
   pdfbtn.addEventListener('click', generarPDFInteractivo);
   syncButton();
