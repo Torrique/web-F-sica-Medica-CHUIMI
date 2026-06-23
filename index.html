@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inicio | Servicio de Física Médica y Protección Radiológica</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,11 +11,10 @@
 <header class="topbar">
   <a class="brand" href="index.html">
     <img class="brandlogo" src="assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
-
     <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
   </a>
   <nav class="topnav">
-    <a class="toplink" href="ver-video.html"><span class="lbl">Vídeo</span></a>
+    <a class="toplink" href="ver-video.html"><span class="lbl">Vídeo libre</span></a>
     <a class="toplink ghost" href="acceso.html">Acceso con código</a>
   </nav>
 </header>
@@ -27,16 +23,24 @@
   <section class="wrap hero">
     <span class="tag">Portal del Servicio</span>
     <h1>Bienvenido/a al Portal del Servicio</h1>
-    <p class="lede">Seleccione la opción que necesite realizar a continuación. Si es personal de nuevo ingreso, recuerde que debe validar su formación utilizando el código proporcionado por el servicio.</p>
+    <p class="lede">El personal que vaya a iniciar una actividad con exposición a radiaciones ionizantes debe cumplimentar el formulario, generar su código individual y completar el vídeo informativo.</p>
   </section>
 
   <section class="wrap">
     <div class="portal">
-      <a class="pcard feature" href="acceso.html">
+      <a class="pcard feature" href="docs/formulario-ejemplo.html">
+        <span class="pcard-icon"><i class="ic-doc"></i></span>
+        <p class="pcard-kick">Primer paso</p>
+        <h3>Formulario y código individual</h3>
+        <p>Cumplimente sus datos. La página generará automáticamente un código de seguimiento y lo incorporará al PDF editable que deberá remitir al Servicio.</p>
+        <span class="pcard-link">Cumplimentar formulario <span class="arrow">→</span></span>
+      </a>
+
+      <a class="pcard" href="acceso.html">
         <span class="pcard-icon"><i class="ic-ring"></i></span>
-        <p class="pcard-kick">Personal de nuevo ingreso</p>
-        <h3>Formación obligatoria</h3>
-        <p>Acceso al vídeo informativo para personal de nuevo ingreso. Requiere el código de validación para registrar la visualización.</p>
+        <p class="pcard-kick">Segundo paso</p>
+        <h3>Acceso al vídeo con código</h3>
+        <p>Introduzca el código que aparece en su PDF y visualice íntegramente el vídeo. Al finalizar podrá preparar la confirmación dirigida al Servicio.</p>
         <span class="pcard-link">Acceder con código <span class="arrow">→</span></span>
       </a>
 
@@ -44,16 +48,8 @@
         <span class="pcard-icon"><i class="ic-play"></i></span>
         <p class="pcard-kick">Consulta general</p>
         <h3>Visualización libre</h3>
-        <p>Acceso directo al vídeo informativo del servicio para consulta general. No registra la visualización ni requiere validación.</p>
-        <span class="pcard-link">Ver vídeo ahora <span class="arrow">→</span></span>
-      </a>
-
-      <a class="pcard" href="docs/formulario-ejemplo.html">
-        <span class="pcard-icon"><i class="ic-doc"></i></span>
-        <p class="pcard-kick">Registro de datos</p>
-        <h3>Formulario de datos</h3>
-        <p>Descargue el formulario de registro de datos. Una vez cumplimentado, deberá enviarlo a través del correo interno privado del servicio.</p>
-        <span class="pcard-link">Descargar documento <span class="arrow">↓</span></span>
+        <p>Acceso directo al vídeo informativo para consulta. Esta modalidad no queda asociada a un código ni prepara una confirmación de visualización.</p>
+        <span class="pcard-link">Ver vídeo libremente <span class="arrow">→</span></span>
       </a>
     </div>
   </section>
@@ -61,10 +57,7 @@
 
 <footer class="foot">
   <div class="foot-in">
-    <div>
-      <b>Servicio de Física Médica y Protección Radiológica</b>
-      Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)
-    </div>
+    <div><b>Servicio de Física Médica y Protección Radiológica</b>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</div>
     <div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div>
   </div>
 </footer>
