@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso al vídeo | Física Médica y Protección Radiológica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img class="brandlogo" src="assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
+
+    <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
+  </a>
+  <nav class="topnav">
+    <a class="toplink ghost" href="index.html">← Inicio</a>
+  </nav>
+</header>
+
+<main class="page-center">
+  <div class="panel">
+    <span class="panel-icon"><i class="ic-ring"></i></span>
+    <h1>Acceso individual al vídeo</h1>
+    <p class="sub">Introduzca el código que ha recibido del Servicio de Física Médica para registrar su visualización.</p>
+
+    <form onsubmit="return false;">
+      <div class="field">
+        <label for="codigo">Código de acceso</label>
+        <input id="codigo" class="code-input" type="text" inputmode="text" autocomplete="off" placeholder="XXXX-XXXX" maxlength="9">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Continuar</button>
+    </form>
+
+    <p class="help">¿No tiene código? Solicítelo en el <a href="#">Servicio de Física Médica</a>.</p>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <b>Servicio de Física Médica y Protección Radiológica</b>
+      Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)
+    </div>
+    <div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div>
+  </div>
+</footer>
+
+</body>
+</html>

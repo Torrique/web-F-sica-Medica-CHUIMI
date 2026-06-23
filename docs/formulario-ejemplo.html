@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de datos | Física Médica y Protección Radiológica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="../index.html">
+    <img class="brandlogo" src="../assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
+    <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
+  </a>
+  <nav class="topnav">
+    <a class="toplink ghost" href="../index.html">← Inicio</a>
+  </nav>
+</header>
+
+<main class="wrap form-page">
+  <div class="form-head">
+    <span class="tag">Formulario de datos</span>
+    <h1>Ficha del trabajador profesionalmente expuesto</h1>
+    <p class="lede">Cumplimente los campos y pulse «Descargar / Guardar como PDF». El archivo se genera en su propio dispositivo: ningún dato se almacena ni se envía desde esta web. Después, remita el PDF por el correo interno del Servicio.</p>
+  </div>
+
+  <form class="form-card" onsubmit="return false;">
+
+    <div class="print-head">
+      <img src="../assets/logo-servicio.jpg" alt="">
+      <div>
+        <b>Servicio de Física Médica y Protección Radiológica</b>
+        <span>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</span>
+        <span class="ph-title">Ficha del trabajador profesionalmente expuesto</span>
+      </div>
+    </div>
+
+    <!-- Datos personales -->
+    <div class="fieldset">
+      <h2 class="fs-title">Datos personales</h2>
+      <div class="frow">
+        <div class="fg"><label class="flabel" for="nombre">Nombre</label><input class="inp" id="nombre" type="text" autocomplete="given-name"></div>
+        <div class="fg"><label class="flabel" for="apellidos">Apellidos</label><input class="inp" id="apellidos" type="text" autocomplete="family-name"></div>
+        <div class="fg"><label class="flabel" for="dni">DNI</label><input class="inp" id="dni" type="text" placeholder="00000000-A" autocomplete="off"></div>
+        <div class="fg"><label class="flabel" for="fnac">Fecha de nacimiento</label><input class="inp" id="fnac" type="date"></div>
+        <div class="fg"><label class="flabel" for="tel">Teléfono</label><input class="inp" id="tel" type="tel" autocomplete="tel"></div>
+        <div class="fg"><label class="flabel" for="email">Correo electrónico</label><input class="inp" id="email" type="email" autocomplete="email"></div>
+        <div class="fg">
+          <label class="flabel" for="categoria">Categoría</label>
+          <select class="inp" id="categoria">
+            <option value="" selected disabled>Seleccione…</option>
+            <option>Categoría A</option>
+            <option>Categoría B</option>
+            <option>No expuesto</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flabel" for="servicio">Servicio</label>
+          <select class="inp" id="servicio">
+            <option value="" selected disabled>Seleccione…</option>
+            <option>Radiodiagnóstico</option>
+            <option>Radioterapia</option>
+            <option>Medicina Nuclear</option>
+            <option>Hemodinámica</option>
+            <option>Radiología Vascular / Intervencionista</option>
+            <option>Cardiología</option>
+            <option>Quirófano</option>
+            <option>Endoscopia / Digestivo</option>
+            <option>Urología</option>
+            <option>Traumatología</option>
+            <option>UCI</option>
+            <option>Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Domicilio -->
+    <div class="fieldset">
+      <h2 class="fs-title">Domicilio</h2>
+      <div class="frow">
+        <div class="fg col-2"><label class="flabel" for="domicilio">Domicilio</label><input class="inp" id="domicilio" type="text" autocomplete="street-address"></div>
+        <div class="fg"><label class="flabel" for="municipio">Municipio</label><input class="inp" id="municipio" type="text"></div>
+        <div class="fg"><label class="flabel" for="cp">Código postal</label><input class="inp" id="cp" type="text" inputmode="numeric" placeholder="35000"></div>
+        <div class="fg"><label class="flabel" for="provincia">Provincia</label><input class="inp" id="provincia" type="text" value="Las Palmas"></div>
+      </div>
+    </div>
+
+    <!-- Documentación aportada -->
+    <div class="fieldset">
+      <h2 class="fs-title">Documentación aportada</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox"> Fotocopia del DNI</label>
+        <label class="check"><input type="checkbox"> Título compulsado</label>
+        <label class="check"><input type="checkbox"> Trabaja en otra institución</label>
+        <label class="check"><input type="checkbox"> Documentos de obligación</label>
+        <label class="check"><input type="checkbox"> Acreditación del CSN</label>
+      </div>
+    </div>
+
+    <!-- Situación -->
+    <div class="fieldset">
+      <h2 class="fs-title">Situación</h2>
+      <div class="altabox">
+        <label class="check"><input type="checkbox" id="enalta" checked> En alta</label>
+        <span class="hint">Si el trabajador deja de estar expuesto, deseleccione esta casilla.</span>
+      </div>
+    </div>
+
+    <!-- Observaciones y valoración -->
+    <div class="fieldset">
+      <h2 class="fs-title">Observaciones</h2>
+      <div class="frow">
+        <div class="fg col-2"><label class="flabel" for="obs">Observaciones <span class="opt">(opcional)</span></label><textarea class="inp" id="obs"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Protección de datos -->
+    <div class="fieldset">
+      <h2 class="fs-title">Protección de datos</h2>
+      <div class="privacy">
+        <p>Este formulario se cumplimenta y se guarda <b>en su propio dispositivo</b>. Esta página <b>no almacena ni envía</b> los datos introducidos: no quedan en ningún servidor ni en la nube.</p>
+        <p>Una vez generado el PDF, remítalo <b>por el canal de correo interno del Servicio</b>. Los datos serán tratados por el Servicio de Física Médica y Protección Radiológica del CHUIMI con la finalidad de la vigilancia y valoración del puesto del trabajador profesionalmente expuesto, conforme al RGPD (UE) 2016/679 y la LOPDGDD 3/2018. Puede ejercer sus derechos de acceso, rectificación, supresión y oposición ante el Servicio.</p>
+        <label class="check ack"><input type="checkbox" id="ack"> He leído y acepto la información sobre protección de datos.</label>
+      </div>
+    </div>
+
+    <!-- Acción: generar PDF (todo local) -->
+    <div class="form-actions">
+      <button class="btn btn-primary locked" type="button" id="pdfbtn" onclick="window.print()" disabled>Descargar / Guardar como PDF</button>
+      <span class="pdfhint">Se abrirá el diálogo de impresión: elija <b>«Guardar como PDF»</b> y envíe el archivo por correo al Servicio.</span>
+    </div>
+
+  </form>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <b>Servicio de Física Médica y Protección Radiológica</b>
+      Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)
+    </div>
+    <div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var ack = document.getElementById('ack');
+    var pdfbtn = document.getElementById('pdfbtn');
+    function sync() {
+      pdfbtn.disabled = !ack.checked;
+      pdfbtn.classList.toggle('locked', !ack.checked);
+    }
+    ack.addEventListener('change', sync);
+    sync();
+  })();
+</script>
+
+</body>
+</html>

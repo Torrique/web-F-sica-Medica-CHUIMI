@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vídeo informativo | Física Médica y Protección Radiológica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img class="brandlogo" src="assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
+
+    <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
+  </a>
+  <nav class="topnav">
+    <a class="toplink ghost" href="index.html">← Inicio</a>
+  </nav>
+</header>
+
+<main class="wrap video-page">
+  <div class="video-head">
+    <span class="tag">Paso obligatorio</span>
+    <h1>Vídeo informativo</h1>
+    <p class="lede">Visualice el vídeo completo. Al finalizar podrá registrar la visualización para certificar su formación.</p>
+  </div>
+
+  <div class="video-shell">
+    <div class="video" id="player">
+      <!-- Sube tu archivo a web/assets/video-informativo.mp4 (ese nombre exacto) y se reproducirá aquí. -->
+      <video id="vid" class="video-el" controls controlsList="nodownload" preload="metadata" playsinline poster="">
+        <source src="assets/video-informativo.mp4" type="video/mp4">
+        Su navegador no admite la reproducción de vídeo.
+      </video>
+      <div class="vidfallback" id="vidfallback">
+        <div class="vidlabel">VÍDEO PENDIENTE DE PUBLICAR</div>
+        <p>El vídeo informativo se mostrará aquí una vez publicado en el alojamiento.</p>
+      </div>
+    </div>
+
+    <div class="video-bar">
+      <p class="note"><b>Visualización íntegra requerida.</b> El botón de registro se activará al finalizar el vídeo.</p>
+      <button class="btn btn-primary locked" id="registrar" disabled>Registrar finalización</button>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <b>Servicio de Física Médica y Protección Radiológica</b>
+      Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)
+    </div>
+    <div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div>
+  </div>
+</footer>
+
+<script>
+  // El botón "Registrar finalización" se habilita cuando el vídeo termina de reproducirse.
+  (function () {
+    var vid = document.getElementById('vid');
+    var registrar = document.getElementById('registrar');
+    var fallback = document.getElementById('vidfallback');
+    var note = document.querySelector('.video-bar .note');
+
+    // Si el archivo de vídeo aún no existe, mostrar el aviso en lugar del reproductor.
+    vid.addEventListener('error', function () {
+      vid.style.display = 'none';
+      fallback.style.display = 'flex';
+    });
+    vid.addEventListener('loadeddata', function () {
+      fallback.style.display = 'none';
+      vid.style.display = 'block';
+    });
+
+    function habilitar() {
+      registrar.classList.remove('locked');
+      registrar.removeAttribute('disabled');
+      note.innerHTML = '<b>Vídeo finalizado.</b> Ya puede registrar la visualización.';
+    }
+    vid.addEventListener('ended', habilitar);
+
+    registrar.addEventListener('click', function () {
+      registrar.textContent = '✓ Visualización registrada';
+      registrar.classList.add('btn-secondary');
+      registrar.classList.add('locked');
+    });
+  })();
+</script>
+
+</body>
+</html>
