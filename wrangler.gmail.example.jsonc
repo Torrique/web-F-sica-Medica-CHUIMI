@@ -1,5 +1,5 @@
 {
-  "name": "web-f-sica-medica-chuimi",
+  "name": "scs",
   "main": "src/worker.js",
   "compatibility_date": "2026-06-23",
   "assets": {
@@ -15,6 +15,8 @@
     }
   ],
   "vars": {
-    "CODE_VALID_DAYS": "30"
+    "CODE_VALID_DAYS": "30",
+    "GMAIL_SENDER_EMAIL": "fisicamedicachuimi@gmail.com",
+    "EMAIL_TO": "rfchuimi.scs@gobiernodecanarias.org"
   }
 }
