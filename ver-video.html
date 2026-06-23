@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vídeo informativo | Física Médica y Protección Radiológica</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,24 +11,28 @@
 <header class="topbar">
   <a class="brand" href="index.html">
     <img class="brandlogo" src="assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
-
     <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
   </a>
-  <nav class="topnav">
-    <a class="toplink ghost" href="index.html">← Inicio</a>
-  </nav>
+  <nav class="topnav"><a class="toplink ghost" href="index.html">← Inicio</a></nav>
 </header>
 
 <main class="wrap video-page">
   <div class="video-head">
-    <span class="tag">Paso obligatorio</span>
+    <span class="tag" id="modeTag">Consulta general</span>
     <h1>Vídeo informativo</h1>
-    <p class="lede">Visualice el vídeo completo. Al finalizar podrá registrar la visualización para certificar su formación.</p>
+    <p class="lede" id="modeDescription">Puede visualizar el vídeo para consulta general. Esta modalidad no genera una confirmación de visualización.</p>
   </div>
 
   <div class="video-shell">
+    <div class="registration-banner" id="registrationBanner" hidden>
+      <div>
+        <span>Código de seguimiento</span>
+        <strong id="codigoMostrado"></strong>
+      </div>
+      <button class="btn btn-soft" type="button" id="copiarCodigoVideo">Copiar código</button>
+    </div>
+
     <div class="video" id="player">
-      <!-- Sube tu archivo a web/assets/video-informativo.mp4 (ese nombre exacto) y se reproducirá aquí. -->
       <video id="vid" class="video-el" controls controlsList="nodownload" preload="metadata" playsinline poster="">
         <source src="assets/video-informativo.mp4" type="video/mp4">
         Su navegador no admite la reproducción de vídeo.
@@ -42,54 +43,151 @@
       </div>
     </div>
 
-    <div class="video-bar">
-      <p class="note"><b>Visualización íntegra requerida.</b> El botón de registro se activará al finalizar el vídeo.</p>
-      <button class="btn btn-primary locked" id="registrar" disabled>Registrar finalización</button>
+    <div class="video-bar" id="registrationControls" hidden>
+      <p class="note" id="videoNote"><b>Visualización íntegra requerida.</b> No avance manualmente la reproducción. El botón se activará cuando el vídeo termine.</p>
+      <button class="btn btn-primary locked" id="registrar" type="button" disabled>Preparar confirmación</button>
+      <div id="mailStatus" class="mail-status" role="status" aria-live="polite"></div>
     </div>
   </div>
 </main>
 
 <footer class="foot">
   <div class="foot-in">
-    <div>
-      <b>Servicio de Física Médica y Protección Radiológica</b>
-      Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)
-    </div>
+    <div><b>Servicio de Física Médica y Protección Radiológica</b>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</div>
     <div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div>
   </div>
 </footer>
 
 <script>
-  // El botón "Registrar finalización" se habilita cuando el vídeo termina de reproducirse.
-  (function () {
-    var vid = document.getElementById('vid');
-    var registrar = document.getElementById('registrar');
-    var fallback = document.getElementById('vidfallback');
-    var note = document.querySelector('.video-bar .note');
+(function () {
+  'use strict';
 
-    // Si el archivo de vídeo aún no existe, mostrar el aviso en lugar del reproductor.
-    vid.addEventListener('error', function () {
-      vid.style.display = 'none';
-      fallback.style.display = 'flex';
-    });
-    vid.addEventListener('loadeddata', function () {
-      fallback.style.display = 'none';
-      vid.style.display = 'block';
-    });
+  const STORAGE_KEY = 'tpeCodigoSeguimiento';
+  const params = new URLSearchParams(window.location.search);
+  const code = String(params.get('code') || '').toUpperCase();
+  const registeredMode = params.get('registro') === '1' && /^TPE-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(code);
 
-    function habilitar() {
-      registrar.classList.remove('locked');
-      registrar.removeAttribute('disabled');
-      note.innerHTML = '<b>Vídeo finalizado.</b> Ya puede registrar la visualización.';
+  const vid = document.getElementById('vid');
+  const registrar = document.getElementById('registrar');
+  const fallback = document.getElementById('vidfallback');
+  const note = document.getElementById('videoNote');
+  const controls = document.getElementById('registrationControls');
+  const banner = document.getElementById('registrationBanner');
+  const codigoMostrado = document.getElementById('codigoMostrado');
+  const copiarCodigoVideo = document.getElementById('copiarCodigoVideo');
+  const modeTag = document.getElementById('modeTag');
+  const modeDescription = document.getElementById('modeDescription');
+  const mailStatus = document.getElementById('mailStatus');
+
+  let maximoAlcanzado = 0;
+  let duracion = 0;
+  let finalizacionHabilitada = false;
+
+  function fechaCanarias() {
+    return new Intl.DateTimeFormat('es-ES', {
+      timeZone: 'Atlantic/Canary',
+      dateStyle: 'full',
+      timeStyle: 'medium'
+    }).format(new Date());
+  }
+
+  function porcentajeVisionado() {
+    if (!duracion || !Number.isFinite(duracion)) return 100;
+    return Math.min(100, Math.round((maximoAlcanzado / duracion) * 100));
+  }
+
+  function habilitarFinalizacion() {
+    if (!registeredMode || finalizacionHabilitada) return;
+    finalizacionHabilitada = true;
+    registrar.classList.remove('locked');
+    registrar.removeAttribute('disabled');
+    note.innerHTML = '<b>Vídeo finalizado.</b> Pulse el botón para preparar el correo de confirmación dirigido al Servicio.';
+  }
+
+  if (registeredMode) {
+    sessionStorage.setItem(STORAGE_KEY, code);
+    modeTag.textContent = 'Formación obligatoria';
+    modeDescription.textContent = 'Visualice el vídeo completo. Al finalizar podrá preparar una confirmación asociada al código incluido en su formulario PDF.';
+    codigoMostrado.textContent = code;
+    banner.hidden = false;
+    controls.hidden = false;
+  }
+
+  copiarCodigoVideo.addEventListener('click', async function () {
+    if (!registeredMode) return;
+    try {
+      await navigator.clipboard.writeText(code);
+      copiarCodigoVideo.textContent = 'Código copiado';
+      window.setTimeout(() => { copiarCodigoVideo.textContent = 'Copiar código'; }, 1800);
+    } catch (_) {
+      window.prompt('Copie el código:', code);
     }
-    vid.addEventListener('ended', habilitar);
+  });
 
-    registrar.addEventListener('click', function () {
-      registrar.textContent = '✓ Visualización registrada';
-      registrar.classList.add('btn-secondary');
-      registrar.classList.add('locked');
-    });
-  })();
+  vid.addEventListener('error', function () {
+    vid.style.display = 'none';
+    fallback.style.display = 'flex';
+  });
+
+  vid.addEventListener('loadeddata', function () {
+    fallback.style.display = 'none';
+    vid.style.display = 'block';
+  });
+
+  vid.addEventListener('loadedmetadata', function () {
+    duracion = Number.isFinite(vid.duration) ? vid.duration : 0;
+  });
+
+  vid.addEventListener('ratechange', function () {
+    if (registeredMode && vid.playbackRate !== 1) vid.playbackRate = 1;
+  });
+
+  vid.addEventListener('timeupdate', function () {
+    if (!registeredMode) return;
+    if (vid.currentTime <= maximoAlcanzado + 2.5) {
+      maximoAlcanzado = Math.max(maximoAlcanzado, vid.currentTime);
+    }
+  });
+
+  vid.addEventListener('seeking', function () {
+    if (!registeredMode) return;
+    if (vid.currentTime > maximoAlcanzado + 2.5) {
+      vid.currentTime = maximoAlcanzado;
+      note.innerHTML = '<b>Visualización íntegra requerida.</b> No se permite avanzar a una parte todavía no reproducida.';
+    }
+  });
+
+  vid.addEventListener('ended', function () {
+    if (!registeredMode) return;
+    maximoAlcanzado = Math.max(maximoAlcanzado, vid.currentTime);
+    if (!duracion || maximoAlcanzado >= duracion * 0.9) habilitarFinalizacion();
+  });
+
+  registrar.addEventListener('click', function () {
+    if (!registeredMode || !finalizacionHabilitada) return;
+
+    const fecha = fechaCanarias();
+    const porcentaje = porcentajeVisionado();
+    const asunto = `Confirmación de visualización - ${code}`;
+    const cuerpo = [
+      'Se comunica la finalización del vídeo informativo de formación en protección radiológica.',
+      '',
+      `Código de seguimiento: ${code}`,
+      `Fecha y hora de finalización: ${fecha}`,
+      `Porcentaje de reproducción validado: ${porcentaje}%`,
+      'Página de formación: https://scs.fisicamedicachuimi.workers.dev/ver-video.html',
+      '',
+      'El formulario PDF remitido al Servicio contiene este mismo código de seguimiento.'
+    ].join('\n');
+
+    const mailto = `mailto:rfchuimi.scs@gobiernodecanarias.org?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+    sessionStorage.setItem('tpeUltimaFinalizacion', JSON.stringify({ code, fecha, porcentaje }));
+    mailStatus.className = 'mail-status success';
+    mailStatus.innerHTML = '<b>Confirmación preparada.</b> Se abrirá su aplicación de correo. Revise el mensaje y pulse «Enviar» para que el Servicio reciba la confirmación.';
+    registrar.textContent = 'Abrir de nuevo el correo';
+    window.location.href = mailto;
+  });
+})();
 </script>
 
 </body>
