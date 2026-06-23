@@ -3,5 +3,5 @@ migrations
 node_modules
 package.json
 package-lock.json
-wrangler.correo-automatico.example.jsonc
+wrangler.gmail.example.jsonc
 CORREO_AUTOMATICO_SETUP.md
