@@ -4,4 +4,4 @@ node_modules
 package.json
 package-lock.json
 wrangler.gmail.example.jsonc
-CORREO_AUTOMATICO_SETUP.md
+GMAIL_API_SETUP.md
