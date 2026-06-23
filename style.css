@@ -200,27 +200,43 @@ textarea.inp{resize:vertical;min-height:96px;line-height:1.5;}
 }
 
 /* ---- Estado de generación del PDF interactivo ---- */
-.pdfstatus{
-  display:none;
-  flex-basis:100%;
-  padding:11px 14px;
-  border-radius:9px;
-  font-size:13.5px;
-  line-height:1.45;
-}
-.pdfstatus.success{
-  display:block;
-  color:#155d43;
-  background:#e9f7f1;
-  border:1px solid #b9e2d1;
-}
-.pdfstatus.error{
-  display:block;
-  color:#8b2e2e;
-  background:#fff0f0;
-  border:1px solid #efc7c7;
-}
-.btn.loading{
-  cursor:wait;
-  opacity:.75;
+.pdfstatus{display:none;flex-basis:100%;padding:11px 14px;border-radius:9px;font-size:13.5px;line-height:1.45;}
+.pdfstatus.success{display:block;color:#155d43;background:#e9f7f1;border:1px solid #b9e2d1;}
+.pdfstatus.error{display:block;color:#8b2e2e;background:#fff0f0;border:1px solid #efc7c7;}
+.btn.loading{cursor:wait;opacity:.75;}
+
+/* ---- Código de seguimiento ---- */
+.tracking-fieldset{background:linear-gradient(180deg,#fbfdff 0%,#f5f9fc 100%);}
+.tracking-box{display:grid;grid-template-columns:minmax(260px,1fr) auto;gap:18px 24px;align-items:end;padding:22px;border:1px solid #cddae4;border-radius:14px;background:#fff;}
+.tracking-main{display:flex;flex-direction:column;}
+.tracking-code{width:100%;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:22px;font-weight:700;letter-spacing:.08em;padding:14px 16px;border:1.5px solid #9ebed2;border-radius:10px;background:#f7fbfe;color:var(--blue);text-transform:uppercase;}
+.tracking-code::placeholder{font-family:inherit;font-size:15px;font-weight:500;letter-spacing:0;color:#97a8b4;}
+.tracking-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.tracking-help{grid-column:1/-1;margin:0;color:var(--muted);font-size:13.5px;line-height:1.55;}
+.after-pdf{flex-basis:100%;display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;padding:16px 18px;border:1px solid #b9e2d1;border-radius:11px;background:#f0faf6;color:#285c49;font-size:13.5px;}
+.after-pdf[hidden]{display:none;}
+.after-pdf b{color:#155d43;}
+.after-pdf .btn{margin-left:auto;}
+
+/* ---- Acceso y mensajes ---- */
+.form-message{min-height:1.4em;margin:12px 0 0;font-size:13.5px;line-height:1.45;text-align:center;color:var(--muted);}
+.form-message.error{color:#8b2e2e;background:#fff0f0;border:1px solid #efc7c7;border-radius:9px;padding:10px 12px;}
+.code-input{letter-spacing:.12em;}
+
+/* ---- Registro de visualización ---- */
+.registration-banner{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px;padding:16px 20px;border:1px solid #b9d2e2;border-radius:13px;background:#f2f8fc;}
+.registration-banner[hidden]{display:none;}
+.registration-banner span{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);}
+.registration-banner strong{display:block;margin-top:3px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:21px;letter-spacing:.08em;color:var(--blue);}
+.mail-status{display:none;flex-basis:100%;padding:12px 14px;border-radius:9px;font-size:13.5px;line-height:1.5;}
+.mail-status.success{display:block;color:#155d43;background:#e9f7f1;border:1px solid #b9e2d1;}
+
+@media(max-width:680px){
+  .tracking-box{grid-template-columns:1fr;align-items:stretch;}
+  .tracking-actions{width:100%;}
+  .tracking-actions .btn{flex:1;}
+  .after-pdf .btn{margin-left:0;width:100%;}
+  .registration-banner{align-items:flex-start;flex-direction:column;}
+  .registration-banner .btn{width:100%;}
+  .code-input{font-size:20px;letter-spacing:.07em;}
 }
