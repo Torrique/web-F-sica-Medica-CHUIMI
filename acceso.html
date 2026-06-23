@@ -66,9 +66,13 @@
   }
 
   input.addEventListener('input', function () {
-    input.value = formatearCodigo(input.value);
+    input.value = input.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 13);
     message.textContent = '';
     message.className = 'form-message';
+  });
+
+  input.addEventListener('blur', function () {
+    if (input.value.trim()) input.value = formatearCodigo(input.value);
   });
 
   form.addEventListener('submit', function (event) {
