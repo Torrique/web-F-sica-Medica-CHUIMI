@@ -1,0 +1,45 @@
+ACTUALIZACIÓN PARA GENERAR UN PDF INTERACTIVO EN EL NAVEGADOR
+================================================================
+
+Archivos nuevos:
+- assets/pdf-lib.min.js
+- docs/plantilla-tpe-interactiva.pdf
+
+Archivos modificados:
+- docs/formulario-ejemplo.html
+- style.css
+
+Funcionamiento:
+1. El usuario cumplimenta el formulario HTML.
+2. Debe marcar la aceptación de la información sobre protección de datos.
+3. Al pulsar "Descargar PDF editable", el navegador carga la plantilla local.
+4. pdf-lib introduce los valores en los campos AcroForm.
+5. El PDF se descarga en el dispositivo sin enviar los datos al servidor.
+6. El formulario PDF no se aplana y, por tanto, sigue siendo editable.
+
+Campos PDF utilizados:
+- CampoNombre
+- CampoApellidos
+- CampoDNI
+- CampoFechaNacimiento
+- CampoTelefono
+- CampoEmail
+- CampoCategoria
+- CampoServicio
+- CampoDomicilio
+- CampoMunicipio
+- CampoCP
+- CampoProvincia
+- CampoObservaciones
+- CheckFotocopiaDNI
+- CheckTituloCompulsado
+- CheckOtraInstitucion
+- CheckDocumentosObligacion
+- CheckAcreditacionCSN
+- CheckEnAlta
+- CheckAceptacionPD
+
+Publicación:
+Copie el contenido de esta carpeta sobre la raíz del repositorio, manteniendo
+las rutas indicadas. Al fusionar los cambios con la rama principal, Cloudflare
+volverá a desplegar la web automáticamente.

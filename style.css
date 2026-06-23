@@ -198,3 +198,29 @@ textarea.inp{resize:vertical;min-height:96px;line-height:1.5;}
   .wrap,.topbar,.foot{padding-left:20px;padding-right:20px;}
   .panel{padding:28px 22px;}
 }
+
+/* ---- Estado de generación del PDF interactivo ---- */
+.pdfstatus{
+  display:none;
+  flex-basis:100%;
+  padding:11px 14px;
+  border-radius:9px;
+  font-size:13.5px;
+  line-height:1.45;
+}
+.pdfstatus.success{
+  display:block;
+  color:#155d43;
+  background:#e9f7f1;
+  border:1px solid #b9e2d1;
+}
+.pdfstatus.error{
+  display:block;
+  color:#8b2e2e;
+  background:#fff0f0;
+  border:1px solid #efc7c7;
+}
+.btn.loading{
+  cursor:wait;
+  opacity:.75;
+}
