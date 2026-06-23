@@ -1,5 +1,7 @@
 const CODE_PATTERN = /^TPE-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/;
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const GMAIL_TOKEN_URL = "https://oauth2.googleapis.com/token";
+const GMAIL_SEND_URL = "https://gmail.googleapis.com/gmail/v1/users/me/messages/send";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -48,6 +50,114 @@ function sameOrigin(request) {
   const origin = request.headers.get("origin");
   if (!origin) return true;
   return origin === new URL(request.url).origin;
+}
+
+function bytesToBase64(bytes) {
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    const chunk = bytes.subarray(offset, Math.min(offset + chunkSize, bytes.length));
+    binary += String.fromCharCode(...chunk);
+  }
+  return btoa(binary);
+}
+
+function utf8ToBase64(value) {
+  return bytesToBase64(new TextEncoder().encode(String(value)));
+}
+
+function utf8ToBase64Url(value) {
+  return utf8ToBase64(value)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function wrapBase64(value, width = 76) {
+  const lines = [];
+  for (let i = 0; i < value.length; i += width) lines.push(value.slice(i, i + width));
+  return lines.join("\r\n");
+}
+
+function mimeHeader(value) {
+  return `=?UTF-8?B?${utf8ToBase64(value)}?=`;
+}
+
+function buildMimeMessage({ from, to, replyTo, subject, text }) {
+  const body = wrapBase64(utf8ToBase64(text));
+  return [
+    `From: ${mimeHeader("Portal de Formación de Radiofísica CHUIMI")} <${from}>`,
+    `To: ${mimeHeader("SERVICIO DE RADIOFÍSICA Y PROTECCIÓN RADIOLÓGICA CHUIMI")} <${to}>`,
+    `Reply-To: ${replyTo}`,
+    `Subject: ${mimeHeader(subject)}`,
+    "MIME-Version: 1.0",
+    'Content-Type: text/plain; charset="UTF-8"',
+    "Content-Transfer-Encoding: base64",
+    "Auto-Submitted: auto-generated",
+    "",
+    body,
+  ].join("\r\n");
+}
+
+async function getGmailAccessToken(env) {
+  const clientId = String(env.GMAIL_CLIENT_ID || "").trim();
+  const clientSecret = String(env.GMAIL_CLIENT_SECRET || "").trim();
+  const refreshToken = String(env.GMAIL_REFRESH_TOKEN || "").trim();
+
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error("Faltan las credenciales OAuth de Gmail en los secretos del Worker.");
+  }
+
+  const body = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    refresh_token: refreshToken,
+    grant_type: "refresh_token",
+  });
+
+  const response = await fetch(GMAIL_TOKEN_URL, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body,
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.access_token) {
+    const description = data.error_description || data.error || `HTTP ${response.status}`;
+    throw new Error(`Google OAuth rechazó la autenticación: ${description}`);
+  }
+
+  return data.access_token;
+}
+
+async function sendWithGmail(env, subject, text) {
+  const from = String(env.GMAIL_SENDER_EMAIL || "fisicamedicachuimi@gmail.com").trim();
+  const to = String(env.EMAIL_TO || "rfchuimi.scs@gobiernodecanarias.org").trim();
+  const accessToken = await getGmailAccessToken(env);
+  const mime = buildMimeMessage({
+    from,
+    to,
+    replyTo: to,
+    subject,
+    text,
+  });
+
+  const response = await fetch(GMAIL_SEND_URL, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+      "content-type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify({ raw: utf8ToBase64Url(mime) }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.id) {
+    const detail = data?.error?.message || data?.error || `HTTP ${response.status}`;
+    throw new Error(`Gmail API no pudo enviar el mensaje: ${detail}`);
+  }
+
+  return { messageId: data.id, threadId: data.threadId || null };
 }
 
 async function createCode(env) {
@@ -166,17 +276,6 @@ async function completeViewing(request, env) {
     return json({ ok: false, error: "La confirmación ya se está procesando. Espere unos segundos." }, 409);
   }
 
-  const from = String(env.EMAIL_FROM || "").trim();
-  const to = String(env.EMAIL_TO || "rfchuimi.scs@gobiernodecanarias.org").trim();
-  if (!from) {
-    await env.DB.prepare(
-      "UPDATE access_codes SET status = 'email_error', email_status = 'error', email_error = ? WHERE code = ?",
-    )
-      .bind("EMAIL_FROM no configurado", code)
-      .run();
-    return json({ ok: false, error: "El remitente automático todavía no está configurado." }, 503);
-  }
-
   const finishedAt = new Date();
   const subject = `Visualización del vídeo completada - ${code}`;
   const text = [
@@ -189,28 +288,13 @@ async function completeViewing(request, env) {
     `Porcentaje validado: ${percentage}%`,
     "",
     "El formulario PDF remitido al Servicio debe contener este mismo código.",
-    "Este mensaje ha sido generado automáticamente por el portal del Servicio.",
+    "Este mensaje ha sido enviado automáticamente desde fisicamedicachuimi@gmail.com por el portal del Servicio.",
   ].join("\n");
 
   try {
-    const result = await env.EMAIL.send({
-      to: {
-        email: to,
-        name: "SERVICIO DE RADIOFÍSICA Y PROTECCIÓN RADIOLÓGICA CHUIMI",
-      },
-      from: {
-        email: from,
-        name: "Portal de Formación de Radiofísica CHUIMI",
-      },
-      replyTo: {
-        email: to,
-        name: "Servicio de Radiofísica y Protección Radiológica CHUIMI",
-      },
-      subject,
-      text,
-    });
-
+    const result = await sendWithGmail(env, subject, text);
     const sentAt = new Date().toISOString();
+
     await env.DB.prepare(
       `UPDATE access_codes
           SET status = 'completed',
@@ -220,7 +304,7 @@ async function completeViewing(request, env) {
               email_error = NULL
         WHERE code = ?`,
     )
-      .bind(sentAt, result.messageId || null, code)
+      .bind(sentAt, result.messageId, code)
       .run();
 
     return json({ ok: true, code, percentage, sentAt });
@@ -236,7 +320,7 @@ async function completeViewing(request, env) {
       .bind(message, code)
       .run();
 
-    console.error("Automatic email failed", error);
+    console.error("Gmail automatic email failed", error);
     return json({ ok: false, error: "No se pudo enviar la confirmación automática. Inténtelo de nuevo." }, 502);
   }
 }
