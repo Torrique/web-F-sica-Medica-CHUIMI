@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de datos | Física Médica y Protección Radiológica</title>
+<link rel="stylesheet" href="../style.css">
+<script src="../assets/pdf-lib.min.js" defer></script>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="../index.html">
+    <img class="brandlogo" src="../assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
+    <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
+  </a>
+  <nav class="topnav">
+    <a class="toplink ghost" href="../index.html">← Inicio</a>
+  </nav>
+</header>
+
+<main class="wrap form-page">
+  <div class="form-head">
+    <span class="tag">Formulario de datos</span>
+    <h1>Ficha del trabajador profesionalmente expuesto</h1>
+    <p class="lede">Cumplimente los campos y pulse «Descargar PDF editable». El archivo se genera íntegramente en su dispositivo: ningún dato introducido se envía al servidor. Después, remita el PDF por el correo interno del Servicio.</p>
+  </div>
+
+  <form class="form-card" id="tpeForm" onsubmit="return false;">
+
+    <div class="print-head">
+      <img src="../assets/logo-servicio.jpg" alt="">
+      <div>
+        <b>Servicio de Física Médica y Protección Radiológica</b>
+        <span>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</span>
+        <span class="ph-title">Ficha del trabajador profesionalmente expuesto</span>
+      </div>
+    </div>
+
+    <div class="fieldset">
+      <h2 class="fs-title">Datos personales</h2>
+      <div class="frow">
+        <div class="fg"><label class="flabel" for="nombre">Nombre</label><input class="inp" id="nombre" type="text" autocomplete="given-name"></div>
+        <div class="fg"><label class="flabel" for="apellidos">Apellidos</label><input class="inp" id="apellidos" type="text" autocomplete="family-name"></div>
+        <div class="fg"><label class="flabel" for="dni">DNI</label><input class="inp" id="dni" type="text" placeholder="00000000-A" autocomplete="off" maxlength="20"></div>
+        <div class="fg"><label class="flabel" for="fnac">Fecha de nacimiento</label><input class="inp" id="fnac" type="date"></div>
+        <div class="fg"><label class="flabel" for="tel">Teléfono</label><input class="inp" id="tel" type="tel" autocomplete="tel"></div>
+        <div class="fg"><label class="flabel" for="email">Correo electrónico</label><input class="inp" id="email" type="email" autocomplete="email"></div>
+        <div class="fg">
+          <label class="flabel" for="categoria">Categoría</label>
+          <select class="inp" id="categoria">
+            <option value="" selected disabled>Seleccione…</option>
+            <option>Categoría A</option>
+            <option>Categoría B</option>
+            <option>No expuesto</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flabel" for="servicio">Servicio</label>
+          <select class="inp" id="servicio">
+            <option value="" selected disabled>Seleccione…</option>
+            <option>Radiodiagnóstico</option>
+            <option>Radioterapia</option>
+            <option>Medicina Nuclear</option>
+            <option>Hemodinámica</option>
+            <option>Radiología Vascular / Intervencionista</option>
+            <option>Cardiología</option>
+            <option>Quirófano</option>
+            <option>Endoscopia / Digestivo</option>
+            <option>Urología</option>
+            <option>Traumatología</option>
+            <option>UCI</option>
+            <option>Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="fieldset">
+      <h2 class="fs-title">Domicilio</h2>
+      <div class="frow">
+        <div class="fg col-2"><label class="flabel" for="domicilio">Domicilio</label><input class="inp" id="domicilio" type="text" autocomplete="street-address"></div>
+        <div class="fg"><label class="flabel" for="municipio">Municipio</label><input class="inp" id="municipio" type="text"></div>
+        <div class="fg"><label class="flabel" for="cp">Código postal</label><input class="inp" id="cp" type="text" inputmode="numeric" placeholder="35000" maxlength="10"></div>
+        <div class="fg"><label class="flabel" for="provincia">Provincia</label><input class="inp" id="provincia" type="text" value="Las Palmas"></div>
+      </div>
+    </div>
+
+    <div class="fieldset">
+      <h2 class="fs-title">Documentación aportada</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="docDni"> Fotocopia del DNI</label>
+        <label class="check"><input type="checkbox" id="tituloCompulsado"> Título compulsado</label>
+        <label class="check"><input type="checkbox" id="otraInstitucion"> Trabaja en otra institución</label>
+        <label class="check"><input type="checkbox" id="documentosObligacion"> Documentos de obligación/se le remitirá por correo</label>
+        <label class="check"><input type="checkbox" id="acreditacionCsn"> Acreditación del CSN</label>
+      </div>
+    </div>
+
+    <div class="fieldset">
+      <h2 class="fs-title">Situación</h2>
+      <div class="altabox">
+        <label class="check"><input type="checkbox" id="enalta" checked> En alta</label>
+        <span class="hint">Si el trabajador deja de estar expuesto, deseleccione esta casilla.</span>
+      </div>
+    </div>
+
+    <div class="fieldset">
+      <h2 class="fs-title">Observaciones</h2>
+      <div class="frow">
+        <div class="fg col-2"><label class="flabel" for="obs">Observaciones <span class="opt">(opcional)</span></label><textarea class="inp" id="obs"></textarea></div>
+      </div>
+    </div>
+
+    <div class="fieldset">
+      <h2 class="fs-title">Protección de datos</h2>
+      <div class="privacy">
+        <p>Este formulario se cumplimenta y se guarda <b>en su propio dispositivo</b>. Esta página <b>no almacena ni envía</b> los datos introducidos: no quedan en ningún servidor ni en la nube.</p>
+        <p>Una vez generado el PDF, remítalo <b>por el canal de correo interno del Servicio</b>. Los datos serán tratados por el Servicio de Física Médica y Protección Radiológica del CHUIMI con la finalidad de la vigilancia y valoración del puesto del trabajador profesionalmente expuesto, conforme al RGPD (UE) 2016/679 y la LOPDGDD 3/2018. Puede ejercer sus derechos de acceso, rectificación, supresión y oposición ante el Servicio.</p>
+        <label class="check ack"><input type="checkbox" id="ack"> He leído y acepto la información sobre protección de datos.</label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary locked" type="button" id="pdfbtn" disabled>Descargar PDF editable</button>
+      <span class="pdfhint">
+        Se descargará un PDF cumplimentado que seguirá siendo editable. Envíelo por correo interno a
+        <a href="mailto:rfchuimi.scs@gobiernodecanarias.org">rfchuimi.scs@gobiernodecanarias.org</a>.
+      </span>
+      <div id="pdfstatus" class="pdfstatus" role="status" aria-live="polite"></div>
+    </div>
+  </form>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <b>Servicio de Física Médica y Protección Radiológica</b>
+      Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)
+    </div>
+    <div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  const ack = document.getElementById('ack');
+  const pdfbtn = document.getElementById('pdfbtn');
+  const pdfstatus = document.getElementById('pdfstatus');
+
+  function syncButton() {
+    const bloqueado = !ack.checked;
+    pdfbtn.disabled = bloqueado;
+    pdfbtn.classList.toggle('locked', bloqueado);
+  }
+
+  function valor(id) {
+    return document.getElementById(id).value.trim();
+  }
+
+  function marcado(id) {
+    return document.getElementById(id).checked;
+  }
+
+  function fechaEspanola(fechaIso) {
+    if (!fechaIso) return '';
+    const partes = fechaIso.split('-');
+    return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : fechaIso;
+  }
+
+  function nombreSeguro(texto) {
+    return (texto || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9_-]+/g, '_')
+      .replace(/^_+|_+$/g, '')
+      .slice(0, 80);
+  }
+
+  function escribirTexto(form, campo, contenido) {
+    form.getTextField(campo).setText(contenido || '');
+  }
+
+  function seleccionar(form, campo, contenido) {
+    form.getDropdown(campo).select(contenido || 'Seleccione...');
+  }
+
+  function escribirCheck(form, campo, activo) {
+    const check = form.getCheckBox(campo);
+    if (activo) check.check();
+    else check.uncheck();
+  }
+
+  async function generarPDFInteractivo() {
+    pdfstatus.className = 'pdfstatus';
+    pdfstatus.textContent = '';
+    pdfbtn.disabled = true;
+    pdfbtn.classList.add('loading');
+    pdfbtn.textContent = 'Generando PDF…';
+
+    try {
+      if (!window.PDFLib) {
+        throw new Error('No se ha podido cargar la librería local de generación de PDF.');
+      }
+
+      const respuesta = await fetch('./plantilla-tpe-interactiva.pdf', { cache: 'no-store' });
+      if (!respuesta.ok) {
+        throw new Error(`No se ha podido cargar la plantilla PDF (${respuesta.status}).`);
+      }
+
+      const bytesPlantilla = await respuesta.arrayBuffer();
+      const { PDFDocument, StandardFonts } = window.PDFLib;
+      const pdfDoc = await PDFDocument.load(bytesPlantilla);
+      const form = pdfDoc.getForm();
+
+      escribirTexto(form, 'CampoNombre', valor('nombre'));
+      escribirTexto(form, 'CampoApellidos', valor('apellidos'));
+      escribirTexto(form, 'CampoDNI', valor('dni'));
+      escribirTexto(form, 'CampoFechaNacimiento', fechaEspanola(valor('fnac')));
+      escribirTexto(form, 'CampoTelefono', valor('tel'));
+      escribirTexto(form, 'CampoEmail', valor('email'));
+      seleccionar(form, 'CampoCategoria', valor('categoria'));
+      seleccionar(form, 'CampoServicio', valor('servicio'));
+      escribirTexto(form, 'CampoDomicilio', valor('domicilio'));
+      escribirTexto(form, 'CampoMunicipio', valor('municipio'));
+      escribirTexto(form, 'CampoCP', valor('cp'));
+      escribirTexto(form, 'CampoProvincia', valor('provincia'));
+      escribirTexto(form, 'CampoObservaciones', valor('obs'));
+
+      escribirCheck(form, 'CheckFotocopiaDNI', marcado('docDni'));
+      escribirCheck(form, 'CheckTituloCompulsado', marcado('tituloCompulsado'));
+      escribirCheck(form, 'CheckOtraInstitucion', marcado('otraInstitucion'));
+      escribirCheck(form, 'CheckDocumentosObligacion', marcado('documentosObligacion'));
+      escribirCheck(form, 'CheckAcreditacionCSN', marcado('acreditacionCsn'));
+      escribirCheck(form, 'CheckEnAlta', marcado('enalta'));
+      escribirCheck(form, 'CheckAceptacionPD', marcado('ack'));
+
+      // Regenera la apariencia visual de los campos, pero NO aplana el formulario.
+      // Por ello, el PDF descargado sigue siendo editable.
+      const fuente = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      form.updateFieldAppearances(fuente);
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const enlace = document.createElement('a');
+
+      const nombre = nombreSeguro(valor('nombre')) || 'trabajador';
+      const apellidos = nombreSeguro(valor('apellidos'));
+      enlace.href = url;
+      enlace.download = `Ficha_TPE_${nombre}${apellidos ? '_' + apellidos : ''}.pdf`;
+      document.body.appendChild(enlace);
+      enlace.click();
+      enlace.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+
+      pdfstatus.className = 'pdfstatus success';
+      pdfstatus.textContent = 'PDF generado correctamente. El archivo permanece editable.';
+    } catch (error) {
+      console.error(error);
+      pdfstatus.className = 'pdfstatus error';
+      pdfstatus.textContent = `No se pudo generar el PDF: ${error.message}`;
+    } finally {
+      pdfbtn.textContent = 'Descargar PDF editable';
+      pdfbtn.classList.remove('loading');
+      syncButton();
+    }
+  }
+
+  ack.addEventListener('change', syncButton);
+  pdfbtn.addEventListener('click', generarPDFInteractivo);
+  syncButton();
+})();
+</script>
+
+</body>
+</html>
