@@ -20,14 +20,14 @@
   <div class="panel">
     <span class="panel-icon"><i class="ic-ring"></i></span>
     <h1>Acceso individual al vídeo</h1>
-    <p class="sub">Introduzca el código de seguimiento generado en el formulario. El mismo código figura en el PDF que debe remitir al Servicio.</p>
+    <p class="sub">Introduzca el código de seguimiento generado en el formulario. El servidor comprobará que el código está registrado y vigente.</p>
 
     <form id="accessForm" novalidate>
       <div class="field">
         <label for="codigo">Código de seguimiento</label>
         <input id="codigo" class="code-input" type="text" inputmode="text" autocomplete="off" placeholder="TPE-XXXX-XXXX" maxlength="13" spellcheck="false" required>
       </div>
-      <button class="btn btn-primary btn-block" type="submit">Continuar al vídeo</button>
+      <button class="btn btn-primary btn-block" id="accessButton" type="submit">Comprobar código y continuar</button>
       <p id="accessMessage" class="form-message" role="alert" aria-live="polite"></p>
     </form>
 
@@ -49,6 +49,7 @@
   const STORAGE_KEY = 'tpeCodigoSeguimiento';
   const input = document.getElementById('codigo');
   const form = document.getElementById('accessForm');
+  const button = document.getElementById('accessButton');
   const message = document.getElementById('accessMessage');
 
   function formatearCodigo(valor) {
@@ -75,7 +76,7 @@
     if (input.value.trim()) input.value = formatearCodigo(input.value);
   });
 
-  form.addEventListener('submit', function (event) {
+  form.addEventListener('submit', async function (event) {
     event.preventDefault();
     const codigo = formatearCodigo(input.value);
     input.value = codigo;
@@ -87,8 +88,28 @@
       return;
     }
 
-    sessionStorage.setItem(STORAGE_KEY, codigo);
-    window.location.href = `ver-video.html?registro=1&code=${encodeURIComponent(codigo)}`;
+    button.disabled = true;
+    button.textContent = 'Comprobando código…';
+    message.textContent = '';
+    message.className = 'form-message';
+
+    try {
+      const response = await fetch('/api/access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: codigo })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || 'No se pudo validar el código.');
+
+      sessionStorage.setItem(STORAGE_KEY, codigo);
+      window.location.href = `ver-video.html?registro=1&code=${encodeURIComponent(codigo)}`;
+    } catch (error) {
+      message.textContent = error.message;
+      message.className = 'form-message error';
+      button.disabled = false;
+      button.textContent = 'Comprobar código y continuar';
+    }
   });
 
   const params = new URLSearchParams(window.location.search);
