@@ -47,7 +47,7 @@
 
       <a class="training-card" href="video-formacion.html?video=protectores-gonadales">
         <div class="training-thumb">
-          <video class="training-preview" muted preload="metadata" playsinline aria-hidden="true"><source src="assets/Protectores_gonadales.mp4#t=2" type="video/mp4"></video>
+          <video class="training-preview" data-preview-time="4" muted preload="metadata" playsinline aria-hidden="true"><source src="assets/Protectores_gonadales.mp4?v=20260625#t=4" type="video/mp4"></video>
           <span class="training-play" aria-hidden="true">▶</span><span class="training-badge">Radiodiagnóstico</span>
         </div>
         <div class="training-content">
@@ -66,7 +66,9 @@
 <script>
 document.querySelectorAll('.training-preview').forEach(function(video){
   video.addEventListener('loadedmetadata',function(){
-    try{video.currentTime=Math.min(2,Math.max(0,video.duration/10));}catch(e){}
+    var requested=Number(video.dataset.previewTime||0);
+    var target=requested>0?requested:Math.min(2,Math.max(0,video.duration/10));
+    try{video.currentTime=Math.min(target,Math.max(0,video.duration-0.1));}catch(e){}
   });
 });
 </script>
