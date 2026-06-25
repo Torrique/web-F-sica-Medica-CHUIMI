@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formación continuada | Física Médica y Protección Radiológica</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.training-hero{padding:64px 32px 26px;text-align:center}.training-section{padding-top:18px;padding-bottom:72px}.training-heading{display:flex;align-items:end;justify-content:space-between;gap:28px;margin-bottom:28px}.training-heading h2{margin:0;color:var(--blue-ink);font-size:30px}.training-heading>p{max-width:430px;margin:0;color:var(--muted);font-size:14.5px}.training-kicker,.training-type{margin:0 0 6px;color:var(--blue);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.training-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px}.training-card{overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:17px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 10px 32px rgba(15,37,49,.06);transition:transform .18s,box-shadow .18s,border-color .18s}.training-card:hover{transform:translateY(-4px);border-color:#b7ccd9;box-shadow:0 18px 42px rgba(15,37,49,.12)}.training-thumb{position:relative;overflow:hidden;aspect-ratio:16/9;background:linear-gradient(135deg,#dfe8ee,#b8ccd8)}.training-thumb video{width:100%;height:100%;display:block;object-fit:cover;pointer-events:none}.training-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(9,27,39,.56))}.training-play{position:absolute;z-index:2;left:50%;top:50%;display:grid;width:62px;height:62px;place-items:center;border-radius:50%;background:rgba(255,255,255,.94);color:var(--blue);font-size:23px;box-shadow:0 8px 24px rgba(0,0,0,.22);transform:translate(-50%,-50%);padding-left:4px}.training-badge{position:absolute;z-index:2;left:16px;bottom:14px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.94);color:var(--blue-ink);font-size:11px;font-weight:700}.training-content{display:flex;flex:1;flex-direction:column;padding:25px}.training-content h3{margin:0 0 10px;color:var(--blue-ink);font-size:21px;line-height:1.25}.training-content>p:not(.training-type){flex:1;margin:0 0 22px;color:var(--muted);font-size:14.5px}.training-link{color:var(--blue);font-size:14.5px;font-weight:700}@media(max-width:760px){.training-heading{align-items:start;flex-direction:column}.training-grid{grid-template-columns:1fr}.training-hero{padding-top:46px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img class="brandlogo" src="assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
+    <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
+  </a>
+  <nav class="topnav"><a class="toplink ghost" href="index.html">← Inicio</a></nav>
+</header>
+
+<main>
+  <section class="wrap training-hero">
+    <span class="tag">Formación continuada</span>
+    <h1>Formación continuada del trabajador</h1>
+    <p class="lede">Material audiovisual para consulta y actualización en protección radiológica. Estos vídeos son de acceso libre y pueden pausarse, adelantarse o reproducirse parcialmente sin código de seguimiento.</p>
+  </section>
+
+  <section class="wrap training-section" aria-labelledby="videos-disponibles">
+    <div class="training-heading">
+      <div><p class="training-kicker">Biblioteca audiovisual</p><h2 id="videos-disponibles">Vídeos disponibles</h2></div>
+      <p>La biblioteca se ampliará progresivamente con nuevos contenidos formativos.</p>
+    </div>
+
+    <div class="training-grid">
+      <a class="training-card" href="video-formacion.html?video=informativo">
+        <div class="training-thumb">
+          <video class="training-preview" muted preload="metadata" playsinline aria-hidden="true"><source src="assets/video-informativo.mp4#t=2" type="video/mp4"></video>
+          <span class="training-play" aria-hidden="true">▶</span><span class="training-badge">Protección radiológica</span>
+        </div>
+        <div class="training-content">
+          <p class="training-type">Vídeo informativo</p>
+          <h3>Información general de protección radiológica</h3>
+          <p>Introducción a las normas y recomendaciones fundamentales para el personal que trabaja en entornos con radiaciones ionizantes.</p>
+          <span class="training-link">Ver vídeo →</span>
+        </div>
+      </a>
+
+      <a class="training-card" href="video-formacion.html?video=protectores-gonadales">
+        <div class="training-thumb">
+          <video class="training-preview" muted preload="metadata" playsinline aria-hidden="true"><source src="assets/Protectores_gonadales.mp4#t=2" type="video/mp4"></video>
+          <span class="training-play" aria-hidden="true">▶</span><span class="training-badge">Radiodiagnóstico</span>
+        </div>
+        <div class="training-content">
+          <p class="training-type">Actualización profesional</p>
+          <h3>Uso de protectores gonadales en radiodiagnóstico</h3>
+          <p>Material formativo sobre las recomendaciones actuales para el empleo de protectores gonadales durante las exploraciones radiológicas.</p>
+          <span class="training-link">Ver vídeo →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><div class="foot-in"><div><b>Servicio de Física Médica y Protección Radiológica</b>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</div><div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div></div></footer>
+
+<script>
+document.querySelectorAll('.training-preview').forEach(function(video){
+  video.addEventListener('loadedmetadata',function(){
+    try{video.currentTime=Math.min(2,Math.max(0,video.duration/10));}catch(e){}
+  });
+});
+</script>
+</body>
+</html>

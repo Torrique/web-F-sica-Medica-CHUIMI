@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vídeo de formación | Física Médica y Protección Radiológica</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.training-viewer-page{padding-top:48px;padding-bottom:72px}.training-viewer-head{text-align:center;max-width:790px;margin:0 auto 30px}.training-player-shell{overflow:hidden;max-width:960px;margin:0 auto;border:1px solid #ccd9e2;border-radius:17px;background:#0f2531;box-shadow:0 18px 48px rgba(15,37,49,.16)}.training-video{display:block;width:100%;max-height:72vh;aspect-ratio:16/9;background:#0f2531;object-fit:contain}.training-error{min-height:360px;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:#f5f8fa;color:var(--muted);text-align:center}.training-error b{color:var(--blue-ink);font-size:18px}.training-viewer-note{display:flex;max-width:960px;align-items:center;justify-content:space-between;gap:24px;margin:22px auto 0;padding:20px 22px;border:1px solid var(--line);border-radius:13px;background:var(--band)}.training-viewer-note b{color:var(--blue-ink)}.training-viewer-note p{margin:4px 0 0;color:var(--muted);font-size:14px}@media(max-width:680px){.training-viewer-page{padding-top:36px}.training-viewer-note{align-items:stretch;flex-direction:column}.training-viewer-note .btn{width:100%}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img class="brandlogo" src="assets/logo-servicio.jpg" alt="Logo del Servicio de Física Médica y Protección Radiológica">
+    <span class="brandtxt"><b>Física Médica y Protección Radiológica</b><small>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</small></span>
+  </a>
+  <nav class="topnav"><a class="toplink ghost" href="formacion-continuada.html">← Formación continuada</a></nav>
+</header>
+
+<main class="wrap training-viewer-page">
+  <div class="training-viewer-head">
+    <span class="tag" id="videoCategory">Formación continuada</span>
+    <h1 id="videoTitle">Vídeo de formación</h1>
+    <p class="lede" id="videoDescription"></p>
+  </div>
+
+  <section class="training-player-shell" aria-labelledby="videoTitle">
+    <video id="trainingVideo" class="training-video" controls preload="metadata" playsinline>
+      Su navegador no admite la reproducción de vídeo.
+    </video>
+    <div id="videoError" class="training-error" hidden>
+      <b>No se ha podido cargar el vídeo.</b>
+      <span>Vuelva a la biblioteca de formación e inténtelo de nuevo.</span>
+    </div>
+  </section>
+
+  <div class="training-viewer-note">
+    <div><b>Visualización libre</b><p>Este contenido no requiere código, no registra el progreso y no obliga a completar la reproducción.</p></div>
+    <a class="btn btn-secondary" href="formacion-continuada.html">Volver a todos los vídeos</a>
+  </div>
+</main>
+
+<footer class="foot"><div class="foot-in"><div><b>Servicio de Física Médica y Protección Radiológica</b>Complejo Hospitalario Universitario Insular Materno Infantil (CHUIMI)</div><div class="copy">© 2026 Servicio de Física Médica y Protección Radiológica</div></div></footer>
+
+<script>
+(function(){
+  'use strict';
+  const catalogo={
+    informativo:{
+      titulo:'Información general de protección radiológica',
+      categoria:'Protección radiológica',
+      descripcion:'Introducción a las normas y recomendaciones fundamentales para el personal que trabaja en entornos con radiaciones ionizantes.',
+      archivo:'assets/video-informativo.mp4'
+    },
+    'protectores-gonadales':{
+      titulo:'Uso de protectores gonadales en radiodiagnóstico',
+      categoria:'Radiodiagnóstico',
+      descripcion:'Material formativo sobre las recomendaciones actuales para el empleo de protectores gonadales durante las exploraciones radiológicas.',
+      archivo:'assets/Protectores_gonadales.mp4'
+    }
+  };
+  const clave=new URLSearchParams(window.location.search).get('video');
+  const video=catalogo[clave]||catalogo.informativo;
+  const reproductor=document.getElementById('trainingVideo');
+  const error=document.getElementById('videoError');
+  document.title=video.titulo+' | Física Médica y Protección Radiológica';
+  document.getElementById('videoTitle').textContent=video.titulo;
+  document.getElementById('videoCategory').textContent=video.categoria;
+  document.getElementById('videoDescription').textContent=video.descripcion;
+  reproductor.src=video.archivo;
+  reproductor.addEventListener('error',function(){reproductor.hidden=true;error.hidden=false;error.style.display='flex';});
+})();
+</script>
+</body>
+</html>
